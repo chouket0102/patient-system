@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -62,4 +63,18 @@ public class AppUserService implements UserDetailsService {
     public int enableAppUser(String email) {
         return appUserRepository.enableAppUser(email);
     }
+
+    public void deleteUser(Long userId) {
+        boolean exists=appUserRepository.existsById(userId);
+        if(!exists){
+            throw new IllegalStateException("user does not exist");
+        }
+        appUserRepository.deleteById(userId);
+    }
+    public Optional<AppUser> findByEmail(String email) {
+        return appUserRepository.findByEmail(email);
+    }
+
+
+
 }

@@ -31,9 +31,10 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for specific cases (e.g., APIs)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v*/registration/**").permitAll() // Allow specific endpoints
+                        .requestMatchers("/api/v*/registration/**", "/api/v*/login/**").permitAll() // Allow specific endpoints
                         .anyRequest().authenticated() // Authenticate other requests
                 )
                 .formLogin(form -> form
@@ -59,23 +60,14 @@ public class WebSecurityConfig {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true); // Allow credentials such as cookies
-        config.addAllowedOrigin("http://localhost:5173"); // Frontend origin
-        config.addAllowedHeader("*"); // Allow all headers
-        config.addAllowedMethod("*"); // Allow all methods (GET, POST, etc.)
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
 
-    private UrlBasedCorsConfigurationSource corsConfigurationSource() {
+
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:5173"); // Frontend origin
+        config.addAllowedOrigin("http://localhost:5173");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);

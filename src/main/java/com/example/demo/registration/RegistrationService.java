@@ -130,4 +130,9 @@ public class RegistrationService {
                 "\n" +
                 "</div></div>";
     }
+
+    public void deleteUser(Long userId) {
+        appUserService.deleteUser(userId);
+
+    }
 }

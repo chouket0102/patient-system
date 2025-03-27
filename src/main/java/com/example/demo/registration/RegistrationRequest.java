@@ -35,4 +35,6 @@ public class RegistrationRequest {
     public String getPassword() {
         return password;
     }
+
+
 }
